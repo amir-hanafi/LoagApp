@@ -14,16 +14,18 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->group('api', [
-            EnsureFrontendRequestsAreStateful::class,
-        ]);
+    $middleware->group('api', [
+        \Illuminate\Http\Middleware\HandleCors::class,
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    ]);
 
-        $middleware->replace(
-            \Illuminate\Auth\Middleware\Authenticate::class,
-            // gunakan string, bukan "new class"
-            App\Http\Middleware\JsonAuthenticate::class
-        );
-    })
+    $middleware->replace(
+        \Illuminate\Auth\Middleware\Authenticate::class,
+        App\Http\Middleware\JsonAuthenticate::class
+    );
+
+})
+
 
     ->withExceptions(function (Exceptions $exceptions): void {
         //
