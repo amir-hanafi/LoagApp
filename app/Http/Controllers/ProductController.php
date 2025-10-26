@@ -57,6 +57,19 @@ class ProductController extends Controller
         }
     }
 
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+        }
+
+        $product->delete();
+        return response()->json(['message' => 'Produk berhasil dihapus'], 200);
+    }
+
+
+
     /**
      * Ambil semua produk (API).
      * Mengembalikan produk + data user (id, name) dan image_url.

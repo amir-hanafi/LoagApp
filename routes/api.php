@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update-location', [UserController::class, 'updateLocation']);
 
     Route::post('/products', [ProductController::class, 'addProduct']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
 });
