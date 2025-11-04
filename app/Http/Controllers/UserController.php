@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -50,4 +52,22 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User tidak ditemukan'
+            ], 404);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Akun berhasil dihapus'
+        ], 200);
+    }
+
 }

@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::delete('/user/{id}', [UserController::class, 'destroy']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
