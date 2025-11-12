@@ -126,4 +126,47 @@ class ProductController extends Controller
 
         return response()->json($p);
     }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+        }
+
+        // validasi
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // jika ada gambar baru
+        if ($request->hasFile('image')) {
+            // hapus gambar lama kalau ada
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            // simpan gambar baru di storage/app/public/products
+            $imagePath = $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
+        }
+
+
+        // update data lain
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->save();
+
+        return response()->json([
+            'message' => 'Produk berhasil diperbarui',
+            'data' => $product,
+        ]);
+    }
+
+
 }
