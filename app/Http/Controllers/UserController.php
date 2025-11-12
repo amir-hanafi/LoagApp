@@ -70,4 +70,18 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->user(); // ✅ otomatis ambil user dari token
+
+        if (!$user) {
+            return response()->json(['message' => 'User tidak ditemukan'], 404);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'Akun berhasil dihapus'], 200);
+    }
+
+
 }

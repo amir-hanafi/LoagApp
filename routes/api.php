@@ -9,6 +9,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::delete('/user/{id}', [UserController::class, 'destroy']);
 
+Route::middleware('auth:sanctum')->delete('/delete-account', [UserController::class, 'deleteAccount']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
