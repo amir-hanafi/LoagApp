@@ -23,6 +23,7 @@ class UserController extends Controller
     {
         $user = $request->user();
 
+        // validasi
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => [
@@ -33,15 +34,18 @@ class UserController extends Controller
             'password' => 'sometimes|string|min:6',
         ]);
 
-        if ($request->has('name')) {
+        // update name
+        if ($request->filled('name')) {
             $user->name = $request->name;
         }
 
-        if ($request->has('email')) {
+        // update email
+        if ($request->filled('email')) {
             $user->email = $request->email;
         }
 
-        if ($request->has('password')) {
+        // update password
+        if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
@@ -52,6 +56,7 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
 
     public function destroy($id)
     {
