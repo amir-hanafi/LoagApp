@@ -23,30 +23,32 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        // validasi
         $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => [
-                'sometimes',
-                'email',
-                Rule::unique('users')->ignore($user->id),
-            ],
-            'password' => 'sometimes|string|min:6',
+            'name'        => 'sometimes|string|max:255',
+            'email'       => ['sometimes','email', Rule::unique('users')->ignore($user->id)],
+            'password'    => 'sometimes|string|min:6',
+            'province_id' => 'nullable|exists:provinces,id',
+            'city_id'     => 'nullable|exists:cities,id',
         ]);
 
-        // update name
-        if ($request->filled('name')) {
+        if ($request->has('name')) {
             $user->name = $request->name;
         }
 
-        // update email
-        if ($request->filled('email')) {
+        if ($request->has('email')) {
             $user->email = $request->email;
         }
 
-        // update password
-        if ($request->filled('password')) {
+        if ($request->has('password')) {
             $user->password = Hash::make($request->password);
+        }
+
+        if ($request->has('province_id')) {
+            $user->province_id = $request->province_id;
+        }
+
+        if ($request->has('city_id')) {
+            $user->city_id = $request->city_id;
         }
 
         $user->save();
@@ -56,6 +58,7 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
 
 
     public function destroy($id)
