@@ -75,27 +75,31 @@ class ProductController extends Controller
      * Mengembalikan produk + data user (id, name) dan image_url.
      */
     public function index()
-    {
-        $products = Product::with('user')->latest()->get()->map(function ($p) {
-            $p->image_url = $p->image ? asset('storage/' . $p->image) : null;
-            // minimalkan data user yang dikembalikan
-            if ($p->relationLoaded('user') && $p->user) {
-                $p->owner = [
-                    'id' => $p->user->id,
-                    'name' => $p->user->name,
-                ];
-            } else {
-                $p->owner = null;
-            }
-            unset($p->user); // hapus relasi full user kalau tidak perlu
-            return $p;
-        });
+{
+    $products = Product::with(['user.province', 'user.city'])->latest()->get()->map(function ($p) {
+        $p->image_url = $p->image ? asset('storage/' . $p->image) : null;
 
-        return response()->json([
-            'message' => 'Daftar produk',
-            'products' => $products
-        ]);
-    }
+        if ($p->relationLoaded('user') && $p->user) {
+            $p->owner = [
+                'id' => $p->user->id,
+                'name' => $p->user->name,
+                'province' => $p->user->province ? $p->user->province->name : null,
+                'city' => $p->user->city ? $p->user->city->name : null,
+            ];
+        } else {
+            $p->owner = null;
+        }
+
+        unset($p->user);
+        return $p;
+    });
+
+    return response()->json([
+        'message' => 'Daftar produk',
+        'products' => $products
+    ]);
+}
+
 
     /**
      * Tampilkan preview produk di browser (Blade).
@@ -118,14 +122,22 @@ class ProductController extends Controller
      * Optional: lihat detail produk (API)
      */
     public function show($id)
-    {
-        $p = Product::with('user')->findOrFail($id);
-        $p->image_url = $p->image ? asset('storage/' . $p->image) : null;
-        $p->owner = $p->user ? ['id' => $p->user->id, 'name' => $p->user->name] : null;
-        unset($p->user);
+{
+    $p = Product::with(['user.province', 'user.city'])->findOrFail($id);
+    $p->image_url = $p->image ? asset('storage/' . $p->image) : null;
 
-        return response()->json($p);
-    }
+    $p->owner = $p->user ? [
+        'id' => $p->user->id,
+        'name' => $p->user->name,
+        'province' => $p->user->province ? $p->user->province->name : null,
+        'city' => $p->user->city ? $p->user->city->name : null,
+    ] : null;
+
+    unset($p->user);
+
+    return response()->json($p);
+}
+
 
     public function update(Request $request, $id)
     {
