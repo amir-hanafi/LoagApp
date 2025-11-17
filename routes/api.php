@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\LocationController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -21,7 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/profile', [UserController::class, 'getProfile']);
     Route::post('/profile/update', [UserController::class, 'updateProfile']);
-    Route::post('/update-location', [UserController::class, 'updateLocation']);
 
     Route::post('/products', [ProductController::class, 'addProduct']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
@@ -34,3 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/provinces', [ProvinceController::class, 'index']);
 Route::get('/cities/{provinceId}', [CityController::class, 'getByProvince']);
+
+
+
+Route::post('/location/update', [LocationController::class, 'update']);
+Route::get('/location/all', [LocationController::class, 'getAllLocations']);

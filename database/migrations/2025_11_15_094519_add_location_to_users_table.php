@@ -18,6 +18,9 @@ return new class extends Migration
             // relasi opsional (boleh kosong)
             $table->foreign('province_id')->references('id')->on('provinces')->nullOnDelete();
             $table->foreign('city_id')->references('id')->on('cities')->nullOnDelete();
+
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
         });
     }
 
@@ -30,6 +33,8 @@ return new class extends Migration
             $table->dropForeign(['province_id']);
             $table->dropForeign(['city_id']);
             $table->dropColumn(['province_id', 'city_id']);
+
+            $table->dropColumn(['latitude', 'longitude']);
         });
     }
 };
