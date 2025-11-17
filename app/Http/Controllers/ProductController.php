@@ -83,6 +83,7 @@ class ProductController extends Controller
             $p->owner = [
                 'id' => $p->user->id,
                 'name' => $p->user->name,
+                'phone' => $p->user->phone,
                 'province' => $p->user->province ? $p->user->province->name : null,
                 'city' => $p->user->city ? $p->user->city->name : null,
             ];
@@ -129,6 +130,7 @@ class ProductController extends Controller
     $p->owner = $p->user ? [
         'id' => $p->user->id,
         'name' => $p->user->name,
+        'phone' => $p->user->phone,
         'province' => $p->user->province ? $p->user->province->name : null,
         'city' => $p->user->city ? $p->user->city->name : null,
     ] : null;
