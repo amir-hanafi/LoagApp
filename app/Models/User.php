@@ -21,10 +21,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
         'password',
         'province_id',
         'city_id',
+        'district_id',
+        'village_id',
         'phone',
     ];
 
@@ -46,7 +47,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -60,5 +60,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(City::class);
     }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function village()
+    {
+        return $this->belongsTo(Village::class);
+    }
+
 
 }

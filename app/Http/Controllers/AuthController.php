@@ -13,14 +13,12 @@ class AuthController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|unique:users',
             'password' => 'required|string|min:6',
             'phone'    => 'required|string|min:10|max:15',
         ]);
 
         $user = User::create([
             'name'     => $request->name,
-            'email'    => $request->email,
             'password' => Hash::make($request->password),
             'phone'    => $request->phone,
         ]);
@@ -31,30 +29,31 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // Login
     public function login(Request $request)
-    {
-        $request->validate([
-            'email'    => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string',
+        'password' => 'required|string',
+    ]);
 
-        $user = User::where('email', $request->email)->first();
+    $user = User::where('name', $request->name)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Email atau password salah'
-            ], 401);
-        }
-
-        // Buat token
-        $token = $user->createToken('auth_token')->plainTextToken;
-
+    if (!$user || !Hash::check($request->password, $user->password)) {
         return response()->json([
-            'message' => 'Login berhasil',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user'    => $user
-        ], 200);
+            'message' => 'username atau password salah'
+        ], 401);
     }
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login berhasil',
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+        'user' => $user
+    ], 200);
+}
+
+
+    // Login
 }

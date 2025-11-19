@@ -19,6 +19,12 @@ return new class extends Migration
             $table->foreign('province_id')->references('id')->on('provinces')->nullOnDelete();
             $table->foreign('city_id')->references('id')->on('cities')->nullOnDelete();
 
+            $table->unsignedBigInteger('district_id')->nullable()->after('city_id');
+            $table->unsignedBigInteger('village_id')->nullable()->after('district_id');
+
+            $table->foreign('district_id')->references('id')->on('districts')->nullOnDelete();
+            $table->foreign('village_id')->references('id')->on('villages')->nullOnDelete();
+
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
         });
@@ -33,6 +39,9 @@ return new class extends Migration
             $table->dropForeign(['province_id']);
             $table->dropForeign(['city_id']);
             $table->dropColumn(['province_id', 'city_id']);
+            $table->dropForeign(['district_id']);
+            $table->dropForeign(['village_id']);
+            $table->dropColumn(['district_id', 'village_id']);
 
             $table->dropColumn(['latitude', 'longitude']);
         });

@@ -25,18 +25,15 @@ class UserController extends Controller
 
         $request->validate([
             'name'        => 'sometimes|string|max:255',
-            'email'       => ['sometimes','email', Rule::unique('users')->ignore($user->id)],
             'password'    => 'sometimes|string|min:6',
             'province_id' => 'nullable|exists:provinces,id',
             'city_id'     => 'nullable|exists:cities,id',
+            'district_id' => $request->district_id,
+            'village_id' => $request->village_id,
         ]);
 
         if ($request->has('name')) {
             $user->name = $request->name;
-        }
-
-        if ($request->has('email')) {
-            $user->email = $request->email;
         }
 
         if ($request->has('password')) {
@@ -48,6 +45,12 @@ class UserController extends Controller
         }
 
         if ($request->has('city_id')) {
+            $user->city_id = $request->city_id;
+        }
+        if ($request->has('district_id')) {
+            $user->city_id = $request->city_id;
+        }
+        if ($request->has('village_id')) {
             $user->city_id = $request->city_id;
         }
 

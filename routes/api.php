@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/provinces', [ProvinceController::class, 'index']);
 Route::get('/cities/{provinceId}', [CityController::class, 'getByProvince']);
+Route::get('/districts/{city_id}', [LocationController::class, 'districts']);
+Route::get('/villages/{district_id}', [LocationController::class, 'villages']);
 
 
 
