@@ -22,6 +22,8 @@ class CitySeeder extends Seeder
             // DKI Jakarta (id = 3)
             ['province_id' => 3, 'name' => 'Jakarta Selatan'],
             ['province_id' => 3, 'name' => 'Jakarta Utara'],
+
+
         ]);
     }
 }

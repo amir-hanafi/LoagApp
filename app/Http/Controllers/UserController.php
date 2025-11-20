@@ -11,56 +11,47 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     // Ambil profil user
-    public function getProfile(Request $request)
-    {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    }
+public function getProfile(Request $request)
+{
+    $user = $request->user()->load(['province', 'city', 'district', 'village']);
 
-    // Update profil user
-    public function updateProfile(Request $request)
-    {
-        $user = $request->user();
+    return response()->json([
+        'status' => true,
+        'message' => 'Profile retrieved successfully',
+        'data' => $user
+    ]);
+}
 
-        $request->validate([
-            'name'        => 'sometimes|string|max:255',
-            'password'    => 'sometimes|string|min:6',
-            'province_id' => 'nullable|exists:provinces,id',
-            'city_id'     => 'nullable|exists:cities,id',
-            'district_id' => $request->district_id,
-            'village_id' => $request->village_id,
-        ]);
 
-        if ($request->has('name')) {
-            $user->name = $request->name;
-        }
+public function updateProfile(Request $request)
+{
+    $user = $request->user();
 
-        if ($request->has('password')) {
-            $user->password = Hash::make($request->password);
-        }
+    $request->validate([
+        'name'          => 'nullable|string|max:255',
+        'phone'         => 'nullable|string|max:20',
+        'province_id'   => 'nullable|exists:provinces,id',
+        'city_id'       => 'nullable|exists:cities,id',
+        'district_id'   => 'nullable|exists:districts,id',
+        'village_id'    => 'nullable|exists:villages,id',
+    ]);
 
-        if ($request->has('province_id')) {
-            $user->province_id = $request->province_id;
-        }
+    $user->update([
+        'name'        => $request->name ?? $user->name,
+        'phone'       => $request->phone ?? $user->phone,
+        'province_id' => $request->province_id ?? $user->province_id,
+        'city_id'     => $request->city_id ?? $user->city_id,
+        'district_id' => $request->district_id ?? $user->district_id,
+        'village_id'  => $request->village_id ?? $user->village_id,
+    ]);
 
-        if ($request->has('city_id')) {
-            $user->city_id = $request->city_id;
-        }
-        if ($request->has('district_id')) {
-            $user->city_id = $request->city_id;
-        }
-        if ($request->has('village_id')) {
-            $user->city_id = $request->city_id;
-        }
+    return response()->json([
+        'status' => true,
+        'message' => 'Profile updated successfully',
+        'data' => $user->fresh()->load(['province', 'city', 'district', 'village'])
+    ]);
+}
 
-        $user->save();
-
-        return response()->json([
-            'message' => 'Profil berhasil diperbarui',
-            'user' => $user
-        ]);
-    }
 
 
 

@@ -17,7 +17,6 @@ Route::middleware('auth:sanctum')->delete('/delete-account', [UserController::cl
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/profile', [AuthController::class, 'profile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/profile', [UserController::class, 'getProfile']);
@@ -32,10 +31,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::get('/provinces', [ProvinceController::class, 'index']);
-Route::get('/cities/{provinceId}', [CityController::class, 'getByProvince']);
-Route::get('/districts/{city_id}', [LocationController::class, 'districts']);
-Route::get('/villages/{district_id}', [LocationController::class, 'villages']);
+// Alamat (pakai LocationController saja)
+Route::get('/provinces', [LocationController::class, 'getProvinces']);
+Route::get('/cities/{province_id}', [LocationController::class, 'getCities']);
+Route::get('/districts/{city_id}', [LocationController::class, 'getDistricts']);
+Route::get('/villages/{district_id}', [LocationController::class, 'getVillages']);
+
 
 
 

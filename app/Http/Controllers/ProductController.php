@@ -76,7 +76,7 @@ class ProductController extends Controller
      */
     public function index()
 {
-    $products = Product::with(['user.province', 'user.city'])->latest()->get()->map(function ($p) {
+    $products = Product::with(['user.province', 'user.city', 'user.district', 'user.village'])->latest()->get()->map(function ($p) {
         $p->image_url = $p->image ? asset('storage/' . $p->image) : null;
 
         if ($p->relationLoaded('user') && $p->user) {
@@ -86,6 +86,8 @@ class ProductController extends Controller
                 'phone' => $p->user->phone,
                 'province' => $p->user->province ? $p->user->province->name : null,
                 'city' => $p->user->city ? $p->user->city->name : null,
+                'district' => $p->user->district ? $p->user->district->name : null,
+                'village' => $p->user->village ? $p->user->village->name : null,
             ];
         } else {
             $p->owner = null;
@@ -124,7 +126,7 @@ class ProductController extends Controller
      */
     public function show($id)
 {
-    $p = Product::with(['user.province', 'user.city'])->findOrFail($id);
+    $p = Product::with(['user.province', 'user.city', 'user.district', 'user.village'])->findOrFail($id);
     $p->image_url = $p->image ? asset('storage/' . $p->image) : null;
 
     $p->owner = $p->user ? [
@@ -133,6 +135,8 @@ class ProductController extends Controller
         'phone' => $p->user->phone,
         'province' => $p->user->province ? $p->user->province->name : null,
         'city' => $p->user->city ? $p->user->city->name : null,
+        'district' => $p->user->district ? $p->user->district->name : null,
+        'city' => $p->user->district ? $p->user->district->name : null,
     ] : null;
 
     unset($p->user);

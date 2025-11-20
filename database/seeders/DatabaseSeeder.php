@@ -13,15 +13,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Contoh: membuat 1 user untuk testing
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+
 
         // Seeder untuk provinsi & kota
         $this->call([
             ProvinceSeeder::class,
             CitySeeder::class,
+            DistrictSeeder::class,
+            VillageSeeder::class,
         ]);
     }
 }
